@@ -14,6 +14,7 @@ import type_users from "@/pages/administration/type_users/type_users";
 import roles from "@/pages/administration/roles/roles";
 import permisions from "@/pages/administration/permisions";
 //pages Surveys
+import terminalsSurvey from "@/pages/surveys/terminalSurveys/terminalSurvey";
 import surveys from "@/pages/surveys/surveys/surveys";
 import questions from "@/pages/surveys/questions/questions";
 import type_answers from "@/pages/surveys/type_answers";
@@ -57,6 +58,14 @@ const router = new Router({
           path: "terminals",
           name: "Terminales",
           component: terminals,
+          meta: {
+            middleware: [auth,log],
+          },
+        },
+        {
+          path: "terminalsurvey",
+          name: "Terminales Encuestas",
+          component: terminalsSurvey,
           meta: {
             middleware: [auth,log],
           },

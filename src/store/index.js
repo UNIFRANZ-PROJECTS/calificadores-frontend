@@ -89,11 +89,17 @@ export default new Vuex.Store({
     updateAreaCampus ({ commit }, data) {
       commit('UPDATE_AREA_CAMPUS', data)
     },
+    updateTerminal ({ commit }, data) {
+      commit('UPDATE_TERMINAL', data)
+    },
     addOneTypeUser ({ commit }, data) {
       commit('ADD_ONE_TYPE_USER', data)
     },
     addOneAreaCampus ({ commit }, data) {
       commit('ADD_ONE_AREA_CAMPUS', data)
+    },
+    addOneTerminal ({ commit }, data) {
+      commit('ADD_ONE_TERMINAL', data)
     },
     addTypeUsers ({ commit }, data) {
       commit('ADD_TYPE_USERS', data)
@@ -181,11 +187,20 @@ export default new Vuex.Store({
         data
      ]
     },
+    UPDATE_TERMINAL( state, data ){
+      state.terminals = [
+        ...state.terminals.filter(element => element.id !== data.id),
+        data
+     ]
+    },
     ADD_ONE_TYPE_USER( state, data ){
       state.typeUsers.push(data);
     },
     ADD_ONE_AREA_CAMPUS( state, data ){
       state.areaCampus.push(data);
+    },
+    ADD_ONE_TERMINAL( state, data ){
+      state.terminals.push(data);
     },
     ADD_TYPE_USERS( state, data ){
       state.typeUsers = data

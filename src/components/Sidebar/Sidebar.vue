@@ -175,7 +175,7 @@ export default {
         this.itemsSideBar[1].children.push({
           title: "Terminales Encuestas",
           icon: "mdi-circle-small",
-          link: "/terminals",
+          link: "/terminalsurvey",
         });
       }
       if (this.permitions.includes(10)) {
