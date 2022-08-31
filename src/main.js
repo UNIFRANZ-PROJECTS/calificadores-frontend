@@ -10,8 +10,8 @@ import axios from "axios";
 require("@/store/subscriber");
 
 Vue.use(Toast);
-const url = "http://localhost:3000/api";
-// const url = 'https://reviewserver.online/api'
+// const url = "http://localhost:3000/api";
+const url = 'https://reviewserver.online/api'
 
 axios.defaults.baseURL = url;
 

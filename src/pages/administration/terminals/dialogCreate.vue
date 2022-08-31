@@ -22,7 +22,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="show = false">
+        <v-btn  color="blue darken-1" text @click="show = false">
           Cancelar
         </v-btn>
         <v-btn

@@ -3,7 +3,7 @@
       <div class="tables-basic">
         <v-data-table
           :headers="headers"
-          :items="getTerminals"
+          :items="getTerminalSurvey"
           sort-by="id"
           class="elevation-1"
         >
@@ -20,13 +20,20 @@
               <v-spacer></v-spacer>
             </v-toolbar>
           </template>
-          <template v-slot:[`item.state`]="{ item }">
-            <v-chip v-if="item.trm_state == 1" color="green" dark>
-              activo
-            </v-chip>
-            <v-chip v-if="item.trm_state == 0" color="red" dark>
-              inactivo
-            </v-chip>
+          <template v-slot:[`item.id`]="{ item }">
+            {{item[item.length-1].id}}
+          </template>
+          <template v-slot:[`item.serie`]="{ item }">
+            {{item[item.length-1].id_terminal}}
+          </template>
+          <template v-slot:[`item.encuesta`]="{ item }">
+            {{item[item.length-1].serv_survey.srv_name}}
+          </template>
+          <template v-slot:[`item.sede`]="{ item }">
+            {{item[item.length-1].serv_survey.serv_area_headquarter.serv_headquarter.hdq_name}}
+          </template>
+          <template v-slot:[`item.area`]="{ item }">
+            {{item[item.length-1].serv_survey.serv_area_headquarter.serv_area.ars_name}}
           </template>
           <template v-slot:no-data>
             <v-btn color="primary" @click="initialize"> Reset </v-btn>
@@ -48,23 +55,24 @@ export default {
     },
     headers: [
       { text: "Id", value: "id", sortable: false },
-      { text: "Serie", value: "trm_serie", sortable: false },
-      { text: "Estado", value: "state" ,sortable: false,},
-      { text: "Acciones", value: "actions",sortable: false,},
+      { text: "Serie", value: "serie", sortable: false },
+      { text: "Encuesta", value: "encuesta", sortable: false },
+      { text: "Sede", value: "sede", sortable: false },
+      { text: "Area", value: "area", sortable: false },
     ],
   }),
   computed: {
-    ...mapGetters(["getTerminals"]),
+    ...mapGetters(["getTerminalSurvey"]),
   },
   created() {
     this.initialize();
   },
   methods: {
-    ...mapActions(["addTerminals","updateTerminal"]),
+    ...mapActions(["addTerminalSurvey","updateTerminal"]),
     initialize() {
-      this.$http.get("terminal").then((result) => {
+      this.$http.get("terminal/survey").then((result) => {
         console.log(result.data);
-        this.addTerminals(result.data);
+        this.addTerminalSurvey(result.data);
       });
     },
   },

@@ -231,7 +231,7 @@ export default {
           this.statusLoading = false;
           this.$router.replace("/dashboard");
         } catch (error) {
-          this.msgError = error.response.data.message;
+          this.msgError = error.response.data.msg;
           this.statusError = true;
           this.statusLoading = false;
           this.addErrorNotification();

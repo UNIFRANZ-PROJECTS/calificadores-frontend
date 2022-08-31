@@ -21,14 +21,14 @@ export default new Vuex.Store({
     questions:[],
     surveys:[],
     report:[],
-    terminals:[]
+    terminals:[],
+    terminalSurvey:[],
   },
   modules:{
     auth
   },
   getters: {
     getInfo : state => state.info,
-
     getPermisions : state => state.permisions,
     getRolPermisions : state => state.rolPermisions,
     getCampus : state => state.campus,
@@ -38,6 +38,7 @@ export default new Vuex.Store({
     getAreaCampus : state => state.areaCampus,
     getTypeAnswers : state => state.typeAnswers,
     getTerminals : state => state.terminals,
+    getTerminalSurvey : state => state.terminalSurvey,
     getQuestions : state => state.questions,
     getSurveys : state => state.surveys,
     getReport : state => state.report,
@@ -106,6 +107,9 @@ export default new Vuex.Store({
     },
     addTerminals ({ commit }, data) {
       commit('ADD_TERMINALS', data)
+    },
+    addTerminalSurvey ({ commit }, data) {
+      commit('ADD_TERMINALS_SURVEY', data)
     },
     addRoles({ commit }, data) {
       commit('ADD_ROLES', data)
@@ -207,6 +211,9 @@ export default new Vuex.Store({
     },
     ADD_TERMINALS( state, data ){
       state.terminals = data
+    },
+    ADD_TERMINALS_SURVEY( state, data ){
+      state.terminalSurvey = data
     },
     ADD_ROLES( state, data ){
       state.roles = data
