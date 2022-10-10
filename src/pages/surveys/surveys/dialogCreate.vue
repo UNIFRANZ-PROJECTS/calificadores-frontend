@@ -2,13 +2,14 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title>
-        <span class="headline">Nueva Pregunta</span>
+        <span class="headline">Nueva Encuesta</span>
       </v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="6">
               <v-text-field
+              @keyup="estructure.srv_name = estructure.srv_name.toUpperCase()"
                 v-model="estructure.srv_name"
                 color="cyan"
                 clear-icon="mdi-close-circle-outline"
@@ -183,6 +184,10 @@ export default {
   data: () => ({
     ex3: { val: 0, color: "red" },
     ex4: { val: 0, color: "red" },
+    statusError: false,
+    statusLoading: false,
+    msgError: "",
+    position: "top-right",
   }),
   props: ["visible", "editedIndex", "infoData"],
   computed: {
@@ -224,12 +229,19 @@ export default {
           .post("/survey/register/", {
             "id_administrator":localStorage.getItem("user"),
             "id_area_campus":this.estructure.id_area_campus,
-            "srv_name":this.estructure.srv_name,
+            "srv_name":this.estructure.srv_name.trim().toUpperCase(),
             "questions":select
           })
           .then((result) => {
             this.show = false;
             this.addOneSurvey(result.data.surveys);
+          })
+          .catch((error) => {
+            console.log(error.response.data.errors[0].msg);
+            this.msgError = error.response.data.errors[0].msg;
+            this.statusError = true;
+            this.statusLoading = false;
+            this.addErrorNotification();
           });
       } else {
         let select = []
@@ -240,14 +252,35 @@ export default {
           .put("/survey/update/" + this.estructure.id,
             {
               "id_area_campus":this.estructure.id_area_campus,
-              "srv_name":this.estructure.srv_name,
+              "srv_name":this.estructure.srv_name.trim().toUpperCase(),
               "questions":select
             })
           .then((result) => {
             this.show = false;
             this.updateSurvey(result.data);
+          })
+          .catch((error) => {
+            console.log(error.response.data.errors[0].msg);
+            this.msgError = error.response.data.errors[0].msg;
+            this.statusError = true;
+            this.statusLoading = false;
+            this.addErrorNotification();
           });
       }
+    },
+    addErrorNotification() {
+      this.$toast.error(this.msgError, {
+        position: this.position,
+        timeout: 6000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+      });
     },
   },
 };

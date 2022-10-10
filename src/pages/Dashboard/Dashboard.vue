@@ -58,7 +58,7 @@ export default {
   methods: {
     ...mapActions(["addReport"]),
     initialize() {
-       this.$http.get("/areas/areascampus/"+localStorage.getItem("area_campus"))
+       this.$http.get("/areas/areascampus/")
       .then((result) => this.addReport(result.data));
     },
     groupBy(array, key) {

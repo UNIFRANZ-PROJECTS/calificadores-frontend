@@ -13,6 +13,7 @@ export default new Vuex.Store({
     rolPermisions:[],
     info:[],
     campus:[],
+    allAreas:[],
     administrators:[],
     typeUsers:[],
     roles:[],
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     getPermisions : state => state.permisions,
     getRolPermisions : state => state.rolPermisions,
     getCampus : state => state.campus,
+    getAllAreas : state => state.allAreas,
     getAdministrators : state => state.administrators,
     getTypeUsers : state => state.typeUsers,
     getRoles : state => state.roles,
@@ -69,6 +71,9 @@ export default new Vuex.Store({
     addCampus ({ commit }, data) {
       commit('ADD_CAMPUS', data)
     },
+    addAllAreas ({ commit }, data) {
+      commit('ADD_ALL_AREAS', data)
+    },
     addAdministrators ({ commit }, data) {
       commit('ADD_ADMINISTRATORS', data)
     },
@@ -90,6 +95,9 @@ export default new Vuex.Store({
     updateAreaCampus ({ commit }, data) {
       commit('UPDATE_AREA_CAMPUS', data)
     },
+    updateArea ({ commit }, data) {
+      commit('UPDATE_AREA', data)
+    },
     updateTerminal ({ commit }, data) {
       commit('UPDATE_TERMINAL', data)
     },
@@ -98,6 +106,9 @@ export default new Vuex.Store({
     },
     addOneAreaCampus ({ commit }, data) {
       commit('ADD_ONE_AREA_CAMPUS', data)
+    },
+    addOneArea ({ commit }, data) {
+      commit('ADD_ONE_AREA', data)
     },
     addOneTerminal ({ commit }, data) {
       commit('ADD_ONE_TERMINAL', data)
@@ -158,6 +169,9 @@ export default new Vuex.Store({
     ADD_CAMPUS( state, data ){
       state.campus = data
     },
+    ADD_ALL_AREAS( state, data ){
+      state.allAreas = data
+    },
     ADD_ADMINISTRATORS( state, data ){
       state.administrators = data
     },
@@ -191,6 +205,12 @@ export default new Vuex.Store({
         data
      ]
     },
+    UPDATE_AREA( state, data ){
+      state.allAreas = [
+        ...state.allAreas.filter(element => element.id !== data.id),
+        data
+     ]
+    },
     UPDATE_TERMINAL( state, data ){
       state.terminals = [
         ...state.terminals.filter(element => element.id !== data.id),
@@ -202,6 +222,9 @@ export default new Vuex.Store({
     },
     ADD_ONE_AREA_CAMPUS( state, data ){
       state.areaCampus.push(data);
+    },
+    ADD_ONE_AREA( state, data ){
+      state.allAreas.push(data);
     },
     ADD_ONE_TERMINAL( state, data ){
       state.terminals.push(data);

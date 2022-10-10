@@ -42,54 +42,59 @@
           </v-toolbar>
         </template>
         <template v-slot:[`item.example`]="{ item }">
-          <v-avatar v-if="item.tyAns_name == '5 opciones'">
-            <img src="../../assets/icons/1.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '5 opciones'">
-            <img src="../../assets/icons/2.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '5 opciones'">
-            <img src="../../assets/icons/3.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '5 opciones'">
-            <img src="../../assets/icons/4.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '5 opciones'">
-            <img src="../../assets/icons/5.png" :alt="item" />
-          </v-avatar>
+          <div v-if="item.id == 1">
+            <v-avatar>
+              <img src="../../assets/icons/1.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/2.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/3.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/4.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/5.png" :alt="item" />
+            </v-avatar>
+          </div>
+          <div v-if="item.id == 2">
+            <v-avatar>
+              <img src="../../assets/icons/1.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/2.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/3.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/5.png" :alt="item" />
+            </v-avatar>
+          </div>
+          <div v-if="item.id == 3">
+            <v-avatar>
+              <img src="../../assets/icons/1.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/2.png" :alt="item" />
+            </v-avatar>
+            <v-avatar>
+              <img src="../../assets/icons/3.png" :alt="item" />
+            </v-avatar>
+          </div>
+          <div v-if="item.id == 4">
+            <img width="40" src="../../assets/icons/si.png" />
+            <img width="40" src="../../assets/icons/no.png" />
+          </div>
 
-          <v-avatar v-if="item.tyAns_name == '4 opciones'">
-            <img src="../../assets/icons/1.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '4 opciones'">
-            <img src="../../assets/icons/2.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '4 opciones'">
-            <img src="../../assets/icons/3.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '4 opciones'">
-            <img src="../../assets/icons/5.png" :alt="item" />
-          </v-avatar>
-
-          <v-avatar v-if="item.tyAns_name == '3 opciones'">
-            <img src="../../assets/icons/1.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '3 opciones'">
-            <img src="../../assets/icons/2.png" :alt="item" />
-          </v-avatar>
-          <v-avatar v-if="item.tyAns_name == '3 opciones'">
-            <img src="../../assets/icons/3.png" :alt="item" />
-          </v-avatar>
-
-          <img width="40" v-if="item.tyAns_name == '2 opciones'" src="../../assets/icons/si.png"/>
-          <img width="40" v-if="item.tyAns_name == '2 opciones'" src="../../assets/icons/no.png"/>
-
-          <v-icon small class="mr-2" v-if="item.tyAns_name == 'comentario'">
+          <v-icon small class="mr-2" v-if="item.id == 5">
             mdi-comment-text-multiple-outline
           </v-icon>
 
           <v-slider
-            v-if="item.tyAns_name == 'deslizador 0-100'"
+            v-if="item.id == 6"
             v-model="ex3.val"
             :thumb-color="ex3.color"
             thumb-label="always"
@@ -100,13 +105,12 @@
           ></v-slider>
 
           <v-slider
-            v-if="item.tyAns_name == 'deslizador 0-10'"
+            v-if="item.id == 7"
             v-model="ex4.val"
             :thumb-color="ex4.color"
             thumb-label="always"
             max="10"
             step="1"
-            
             ticks="always"
             tick-size="4"
           ></v-slider>
@@ -138,8 +142,7 @@ export default {
         value: "id",
       },
       { text: "Nombre", value: "tyAns_name" },
-      { text: "Descripcion", value: "tyAns_description" },
-      { text: "Ejemplo", value: "example",align: "center",},
+      { text: "Ejemplo", value: "example", align: "center" },
     ],
   }),
   mounted() {
@@ -175,8 +178,7 @@ export default {
         .then((result) => (this.typeAnswers = result.data));
     },
     newItem() {},
-    editItem() {
-    },
+    editItem() {},
     deleteItem() {
       this.dialogDelete = true;
     },

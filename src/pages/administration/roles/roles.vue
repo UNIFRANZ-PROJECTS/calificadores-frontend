@@ -5,6 +5,7 @@
         <v-data-table
           :headers="headers"
           :items="getRolPermisions"
+          :search="search"
           sort-by="id"
           class="elevation-1"
         >
@@ -141,21 +142,11 @@ export default {
     },
     deleteItem(item) {
       this.dialogDelete = true;
-      this.rolEstructure.rls_permisions = [];
       this.rolEstructure.id = item.id;
-      this.rolEstructure.rls_name = item.rls_name;
-      this.rolEstructure.rls_state = item.rls_state;
-      console.log(item.permision)
-      for (let i = 0; i < item.permision.length; i++) {
-        this.rolEstructure.rls_permisions.push(item.permision[i].serv_permision.id);
-      }
-      console.log(this.rolEstructure.rls_permisions)
     },
     confirmDeleteItem(){
       this.$http.put('/rol/update/'+this.rolEstructure.id, {
-        rls_name:this.rolEstructure.rls_name,
-        rls_permisions: this.rolEstructure.rls_permisions,
-        rls_state:"0"
+        rls_state:0
       })
       .then((result) => {
         this.dialogDelete = false
@@ -163,15 +154,8 @@ export default {
       })
     },
     addItem(item){
-      this.rolEstructure.rls_permisions = [];
-      console.log(item.permision)
-      for (let i = 0; i < item.permision.length; i++) {
-        this.rolEstructure.rls_permisions.push(item.permision[i].serv_permision.id);
-      }
       this.$http.put('/rol/update/'+item.id, {
-        rls_name:item.rls_name,
-        rls_permisions: this.rolEstructure.rls_permisions,
-        rls_state:"1"
+        rls_state:1
       })
       .then((result) => {
         this.dialogDelete = false

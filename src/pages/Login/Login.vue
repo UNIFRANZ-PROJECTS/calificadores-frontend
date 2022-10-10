@@ -154,7 +154,7 @@ export default {
       statusError: false,
       statusLoading: false,
       codeForgotPwd: "",
-      msgError: "",
+      
       email: "",
       password: "",
       emailRules: [
@@ -170,7 +170,7 @@ export default {
         (v) => !!v || "Contraseña es requerido",
         (v) => v.length >= 6 || "Mínimo 6 letras",
       ],
-
+      msgError: "",
       position: "top-right",
     };
   },

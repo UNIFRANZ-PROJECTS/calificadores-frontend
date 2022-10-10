@@ -18,7 +18,7 @@
                 hide-details
               ></v-text-field>
               <v-divider class="mx-4" inset vertical></v-divider>
-              <v-spacer></v-spacer> 
+              <v-spacer></v-spacer>
               <v-btn color="primary" dark class="mb-2" @click="newItem()">
                 Nuevo Usuario
               </v-btn>
@@ -52,8 +52,22 @@
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon color="red" v-if="item.adm_state == 1" small @click="deleteItem(item)"> mdi-delete </v-icon>
-            <v-icon color="green" v-if="item.adm_state == 0" small @click="addItem(item)"> mdi-plus-thick </v-icon>
+            <v-icon
+              color="red"
+              v-if="item.adm_state == 1"
+              small
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+            <v-icon
+              color="green"
+              v-if="item.adm_state == 0"
+              small
+              @click="addItem(item)"
+            >
+              mdi-plus-thick
+            </v-icon>
             <!-- <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon> -->
           </template>
           <template v-slot:no-data>
@@ -77,7 +91,7 @@
       :visible="dialogDelete"
       @close="dialogDelete = false"
       @closeConfirm="confirmDeleteItem()"
-      :name="userEstructure.adm_name + userEstructure.adm_lastName"
+      :name="userEstructure.adm_name + ' ' + userEstructure.adm_lastName"
     />
   </div>
 </template>
@@ -94,11 +108,11 @@ export default {
   },
   data: () => ({
     areaSede: [],
-    itemUser:{},
+    itemUser: {},
     editedIndex: -1,
-    dialogAreaSede:false,
-    dialogDelete:false,
-    dialog:false,
+    dialogAreaSede: false,
+    dialogDelete: false,
+    dialog: false,
     search: "",
     userEstructure: {
       id_responsable: 1,
@@ -111,21 +125,19 @@ export default {
       adm_password: "",
     },
     headers: [
-      { text: "N°", align: 'center', value: "id", sortable: false, },
+      { text: "N°", align: "center", value: "id", sortable: false },
       { text: "Nombre", value: "adm_name" },
       { text: "Apellido", value: "adm_lastName" },
       { text: "Correo", value: "adm_email" },
       { text: "Tipo de usuario", value: "serv_type_user.tyUsr_name" },
       { text: "Rol", value: "serv_role.rls_name" },
-      { text: "Area- Sede ", value:"area_sede" ,sortable: false,},
-      { text: "Estado", value: "state" ,sortable: false,},
-      { text: "Acciones", value: "actions",sortable: false,},
+      { text: "Area- Sede ", value: "area_sede", sortable: false },
+      { text: "Estado", value: "state", sortable: false },
+      { text: "Acciones", value: "actions", sortable: false },
     ],
   }),
   computed: {
-    ...mapGetters([
-      "getAdministrators",
-    ]),
+    ...mapGetters(["getAdministrators"]),
   },
   created() {
     this.initialize();
@@ -137,31 +149,37 @@ export default {
       "addTypeUsers",
       "addRoles",
       "addAreasCampus",
-      "updateAdministrator"
+      "updateAdministrator",
     ]),
     initialize() {
-      console.log(localStorage.getItem("area_campus"))
+      console.log(localStorage.getItem("area_campus"));
       // this.$http.get("/campus/1,2,3,4").then((result) => this.addCampus(result.data));
-      this.$http.get("/admin/areacampus/"+ window.localStorage.getItem("area_campus")).then((result) =>this.addAdministrators(result.data));
-      this.$http.get("/typeuser").then((result) => this.addTypeUsers(result.data));
+      this.$http
+        .get("/admin/areacampus/")
+        .then((result) => this.addAdministrators(result.data));
+      this.$http
+        .get("/typeuser")
+        .then((result) => this.addTypeUsers(result.data));
       this.$http.get("/rol").then((result) => this.addRoles(result.data));
-      this.$http.get("/areas/areascampus/"+ window.localStorage.getItem("area_campus")).then((result) => this.addAreasCampus(result.data));
+      this.$http
+        .get("/areas/areascampus")
+        .then((result) => this.addAreasCampus(result.data));
     },
     newItem() {
-      this.editedIndex= -1;
-      this.dialog=true;
+      this.editedIndex = -1;
+      this.dialog = true;
       this.userEstructure.id = undefined;
-      this.userEstructure.adm_name = '';
-      this.userEstructure.adm_lastName = '';
-      this.userEstructure.adm_email = '';
+      this.userEstructure.adm_name = "";
+      this.userEstructure.adm_lastName = "";
+      this.userEstructure.adm_email = "";
       this.userEstructure.id_area_campus = [];
-      this.userEstructure.id_rol = '';
-      this.userEstructure.id_type_user = '';
+      this.userEstructure.id_rol = "";
+      this.userEstructure.id_type_user = "";
     },
     editItem(item) {
       this.editedIndex = this.getAdministrators.indexOf(item);
       this.dialog = true;
-      
+
       this.userEstructure.id_area_campus = [];
 
       this.userEstructure.id = item.id;
@@ -172,64 +190,40 @@ export default {
       this.userEstructure.id_type_user = item.id_type_user;
 
       for (let i = 0; i < item.area_campus.length; i++) {
-        this.userEstructure.id_area_campus.push(item.area_campus[i].id_area_campus);
+        this.userEstructure.id_area_campus.push(
+          item.area_campus[i].id_area_campus
+        );
       }
     },
     deleteItem(item) {
       this.dialogDelete = true;
-      this.userEstructure.id_area_campus = [];
-
       this.userEstructure.id = item.id;
       this.userEstructure.adm_name = item.adm_name;
       this.userEstructure.adm_lastName = item.adm_lastName;
-      this.userEstructure.adm_email = item.adm_email;
-      this.userEstructure.id_rol = item.id_rol;
-      this.userEstructure.id_type_user = item.id_type_user;
-
-      for (let i = 0; i < item.area_campus.length; i++) {
-        this.userEstructure.id_area_campus.push(item.area_campus[i].id_area_campus);
-      }
     },
-    confirmDeleteItem(){
-      this.$http.put('/admin/update/'+this.userEstructure.id, {
-        id_responsable:1,
-        id_type_user:this.userEstructure.id_type_user,
-        id_rol:this.userEstructure.id_rol,
-        id_area_campus: this.userEstructure.id_area_campus,
-        adm_name:this.userEstructure.adm_name,
-        adm_lastName:this.userEstructure.adm_lastName,
-        adm_email:this.userEstructure.adm_email,
-        adm_state:'0'
-      })
-      .then((result) => {
-        this.dialogDelete = false
-        this.updateAdministrator(result.data)
-      })
+    confirmDeleteItem() {
+      this.$http
+        .put("/admin/update/" + this.userEstructure.id, {
+          adm_state: 0,
+        })
+        .then((result) => {
+          this.dialogDelete = false;
+          this.updateAdministrator(result.data);
+        });
     },
-    viewItem(item){
+    viewItem(item) {
       this.areaSede = item.area_campus;
-      this.dialogAreaSede = true
+      this.dialogAreaSede = true;
     },
-    addItem(item){
-      this.userEstructure.id_area_campus = [];
-      for (let i = 0; i < item.area_campus.length; i++) {
-        this.userEstructure.id_area_campus.push(item.area_campus[i].id_area_campus);
-      }
-
-      this.$http.put('/admin/update/'+item.id, {
-        id_responsable:1,
-        id_type_user:item.id_type_user,
-        id_rol:item.id_rol,
-        id_area_campus: this.userEstructure.id_area_campus,
-        adm_name:item.adm_name,
-        adm_lastName:item.adm_lastName,
-        adm_email:item.adm_email,
-        adm_state:'1'
-      })
-      .then((result) => {
-        this.updateAdministrator(result.data)
-      })
-    }
+    addItem(item) {
+      this.$http
+        .put("/admin/update/" + item.id, {
+          adm_state: 1,
+        })
+        .then((result) => {
+          this.updateAdministrator(result.data);
+        });
+    },
   },
 };
 </script>

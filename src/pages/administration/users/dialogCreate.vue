@@ -9,6 +9,7 @@
           <v-row>
             <v-col cols="12" sm="12" md="4">
               <v-text-field
+                @keyup="estructure.adm_name = estructure.adm_name.toUpperCase()"
                 v-model="estructure.adm_name"
                 color="cyan"
                 clear-icon="mdi-close-circle-outline"
@@ -19,6 +20,10 @@
             </v-col>
             <v-col cols="12" sm="12" md="4">
               <v-text-field
+                @keyup="
+                  estructure.adm_lastName =
+                    estructure.adm_lastName.toUpperCase()
+                "
                 v-model="estructure.adm_lastName"
                 color="cyan"
                 clear-icon="mdi-close-circle-outline"
@@ -29,12 +34,7 @@
             </v-col>
             <v-col cols="12" sm="12" md="4">
               <v-select
-                :item-text="
-                  (item) =>
-                    item.ars_name +
-                    ' - ' +
-                    item.hdq_name
-                "
+                :item-text="(item) => item.ars_name + ' - ' + item.hdq_name"
                 item-value="id"
                 :items="getAreaCampus"
                 label="Area - Sede"
@@ -44,17 +44,6 @@
                 v-model="estructure.id_area_campus"
                 persistent-hint
               ></v-select>
-              <!-- <v-select
-                item-text="ars_name"
-                item-value="id"
-                :items="getAreaCampus"
-                label="Sedes"
-                multiple
-                chips
-                hint="puedes seleccionar uno"
-                v-model="estructure.id_campus"
-                persistent-hint
-              ></v-select> -->
             </v-col>
           </v-row>
           <v-row>
@@ -65,7 +54,6 @@
                 :items="getTypeUsers"
                 label="Tipo de usuario"
                 chips
-                hint="puedes seleccionar mas de uno"
                 v-model="estructure.id_type_user"
                 persistent-hint
               ></v-select>
@@ -77,7 +65,6 @@
                 :items="getRoles"
                 label="Rol"
                 chips
-                hint="puedes seleccionar mas de uno"
                 v-model="estructure.id_rol"
                 persistent-hint
               ></v-select>
@@ -121,11 +108,17 @@
 import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
-    show1:false,
-      emailRules: [
-        (v) => !!v || "Correo es requerido",
-        (v) => v.includes('@unifranz.edu.bo') || "correo debe incluir @unifranz.edu.bo",
-      ],
+    statusError: false,
+    statusLoading: false,
+    msgError: "",
+    position: "top-right",
+    show1: false,
+    emailRules: [
+      (v) => !!v || "Correo es requerido",
+      (v) =>
+        v.includes("@unifranz.edu.bo") ||
+        "correo debe incluir @unifranz.edu.bo",
+    ],
   }),
   props: ["visible", "editedIndex", "infoData"],
   computed: {
@@ -144,11 +137,14 @@ export default {
         if (this.estructure.adm_lastName.length > 0) {
           if (this.estructure.id_type_user > 0) {
             if (this.estructure.id_rol > 0) {
-              if (this.estructure.adm_email.length > 0 && this.estructure.adm_email.includes('@unifranz.edu.bo')) {
+              if (
+                this.estructure.adm_email.length > 0 &&
+                this.estructure.adm_email.includes("@unifranz.edu.bo")
+              ) {
                 if (this.estructure.id_area_campus.length > 0) {
-                  if(this.editedIndex === -1){
-                      stateBtn = true;
-                  }else{
+                  if (this.editedIndex === -1) {
+                    stateBtn = true;
+                  } else {
                     stateBtn = true;
                   }
                 }
@@ -171,34 +167,58 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addOneAdministrator","updateAdministrator"]),
+    ...mapActions(["addOneAdministrator", "updateAdministrator"]),
     createAdmin() {
       if (this.editedIndex === -1) {
-        this.$http
-          .post("admin/register", this.estructure)
-          .then((result) => {
-            this.show = false;
-            this.addOneAdministrator(result.data.result)
+        this.$http.post("admin/register", this.estructure).then((result) => {
+          this.show = false;
+          this.addOneAdministrator(result.data.result);
+        })
+        .catch((error) => {
+            console.log(error.response.data.errors[0].msg);
+            this.msgError = error.response.data.errors[0].msg;
+            this.statusError = true;
+            this.statusLoading = false;
+            this.addErrorNotification();
           });
       } else {
         this.$http
-          .put("admin/update/"+this.estructure.id,
-          {
-            id_responsable:localStorage.getItem("user"),
-            id_type_user:this.estructure.id_type_user,
-            id_rol:this.estructure.id_rol,
+          .put("admin/update/" + this.estructure.id, {
+            id_responsable: localStorage.getItem("user"),
+            id_type_user: this.estructure.id_type_user,
+            id_rol: this.estructure.id_rol,
             id_area_campus: this.estructure.id_area_campus,
-            adm_name:this.estructure.adm_name,
-            adm_lastName:this.estructure.adm_lastName,
-            adm_email:this.estructure.adm_email
-          }
-          )
+            adm_name: this.estructure.adm_name.trim().toUpperCase(),
+            adm_lastName: this.estructure.adm_lastName.trim().toUpperCase(),
+            adm_email: this.estructure.adm_email,
+          })
           .then((result) => {
             this.show = false;
-            this.updateAdministrator(result.data)
+            this.updateAdministrator(result.data);
+          })
+          .catch((error) => {
+            console.log(error.response.data.errors[0].msg);
+            this.msgError = error.response.data.errors[0].msg;
+            this.statusError = true;
+            this.statusLoading = false;
+            this.addErrorNotification();
           });
       }
-    }
+    },
+    addErrorNotification() {
+      this.$toast.error(this.msgError, {
+        position: this.position,
+        timeout: 6000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+      });
+    },
   },
 };
 </script>

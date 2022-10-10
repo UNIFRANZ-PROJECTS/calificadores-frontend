@@ -6,18 +6,15 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-row>
-            <v-col cols="12" sm="12" md="6">
-              <v-text-field
-                v-model="estructure.tyUsr_name"
-                color="cyan"
-                clear-icon="mdi-close-circle-outline"
-                @click:clear="clearVariable('nombre')"
-                clearable
-                label="Nombre"
-              ></v-text-field>
-            </v-col>
-          </v-row>
+          <v-text-field
+            @keyup="estructure.tyUsr_name = estructure.tyUsr_name.toUpperCase()"
+            v-model="estructure.tyUsr_name"
+            color="cyan"
+            clear-icon="mdi-close-circle-outline"
+            @click:clear="clearVariable('nombre')"
+            clearable
+            label="Nombre"
+          ></v-text-field>
         </v-container>
       </v-card-text>
       <v-card-actions>
@@ -42,18 +39,23 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  data: () => ({}),
+  data: () => ({
+    statusError: false,
+    statusLoading: false,
+    msgError: "",
+    position: "top-right",
+  }),
   props: ["visible", "editedIndex", "infoData"],
   computed: {
     ...mapGetters(["getPermisions"]),
-    
+
     estructure() {
       return this.infoData;
     },
     stateBtn() {
       let stateBtn = false;
       if (this.estructure.tyUsr_name.length > 0) {
-          stateBtn = true;
+        stateBtn = true;
       }
       return stateBtn;
     },
@@ -91,28 +93,56 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addOneTypeUser","updateTypeUser"]),
+    ...mapActions(["addOneTypeUser", "updateTypeUser"]),
     createNewRol() {
       if (this.editedIndex === -1) {
         this.$http
           .post("/typeuser/register", {
-            tyUsr_name: this.estructure.tyUsr_name,
+            tyUsr_name: this.estructure.tyUsr_name.trim().toUpperCase(),
           })
           .then((result) => {
             this.show = false;
             this.addOneTypeUser(result.data.typeuser);
+          })
+          .catch((error) => {
+            console.log(error.response.data.errors[0].msg);
+            this.msgError = error.response.data.errors[0].msg;
+            this.statusError = true;
+            this.statusLoading = false;
+            this.addErrorNotification();
           });
       } else {
         this.$http
-          .put("/typeuser/update/"+ this.estructure.id, {
-            tyUsr_name: this.estructure.tyUsr_name,
+          .put("/typeuser/update/" + this.estructure.id, {
+            tyUsr_name: this.estructure.tyUsr_name.trim().toUpperCase(),
           })
           .then((result) => {
             this.show = false;
             this.updateTypeUser(result.data.typeuser);
+          })
+          .catch((error) => {
+            console.log(error.response.data.errors[0].msg);
+            this.msgError = error.response.data.errors[0].msg;
+            this.statusError = true;
+            this.statusLoading = false;
+            this.addErrorNotification();
           });
       }
-    }
+    },
+    addErrorNotification() {
+      this.$toast.error(this.msgError, {
+        position: this.position,
+        timeout: 6000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: false,
+        hideProgressBar: true,
+        closeButton: "button",
+        icon: true,
+      });
+    },
   },
 };
 </script>

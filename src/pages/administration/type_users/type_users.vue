@@ -36,8 +36,22 @@
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon color="red" v-if="item.tyUsr_state == 1" small @click="deleteItem(item)"> mdi-delete </v-icon>
-            <v-icon color="green" v-if="item.tyUsr_state == 0" small @click="addItem(item)"> mdi-plus-thick </v-icon>
+            <v-icon
+              color="red"
+              v-if="item.tyUsr_state == 1"
+              small
+              @click="deleteItem(item)"
+            >
+              mdi-delete
+            </v-icon>
+            <v-icon
+              color="green"
+              v-if="item.tyUsr_state == 0"
+              small
+              @click="addItem(item)"
+            >
+              mdi-plus-thick
+            </v-icon>
           </template>
           <template v-slot:no-data>
             <v-btn color="primary" @click="initialize"> Reset </v-btn>
@@ -67,7 +81,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     DialogCreate,
-    DialogDelete
+    DialogDelete,
   },
   data: () => ({
     search: "",
@@ -96,20 +110,18 @@ export default {
     this.initialize();
   },
   methods: {
-    ...mapActions(["addTypeUsers","updateTypeUser"]),
+    ...mapActions(["addTypeUsers", "updateTypeUser"]),
     initialize() {
-      this.$http
-        .get("typeuser")
-        .then((result) => {
-          console.log(result.data)
-          this.addTypeUsers(result.data)
-        });
+      this.$http.get("typeuser").then((result) => {
+        console.log(result.data);
+        this.addTypeUsers(result.data);
+      });
     },
     newItem() {
-      this.editedIndex= -1;
-      this.dialog=true;
+      this.editedIndex = -1;
+      this.dialog = true;
       this.typeUsersEstructure.id = undefined;
-      this.typeUsersEstructure.tyUsr_name = '';
+      this.typeUsersEstructure.tyUsr_name = "";
     },
     editItem(item) {
       this.editedIndex = this.getTypeUsers.indexOf(item);
@@ -124,23 +136,23 @@ export default {
     },
     confirmDeleteItem() {
       this.$http
-          .put("/typeuser/update/"+ this.typeUsersEstructure.id, {
-            tyUsr_state:0
-          })
-          .then((result) => {
-            this.dialogDelete = false;
-            this.updateTypeUser(result.data.typeuser);
-          });
+        .put("/typeuser/update/" + this.typeUsersEstructure.id, {
+          tyUsr_state: 0,
+        })
+        .then((result) => {
+          this.dialogDelete = false;
+          this.updateTypeUser(result.data.typeuser);
+        });
     },
-    addItem(item){
+    addItem(item) {
       this.$http
-          .put("/typeuser/update/"+ item.id, {
-            tyUsr_state:1
-          })
-          .then((result) => {
-            this.updateTypeUser(result.data.typeuser);
-          });
-    }
+        .put("/typeuser/update/" + item.id, {
+          tyUsr_state: 1,
+        })
+        .then((result) => {
+          this.updateTypeUser(result.data.typeuser);
+        });
+    },
   },
 };
 </script>
