@@ -2,7 +2,7 @@
   <v-dialog v-model="show" max-width="500px">
     <v-card>
       <v-card-title class="headline"
-        >¿Estás seguro de que quieres eliminar a {{name}}?</v-card-title
+        >¿Estas seguro de que quieres eliminar a {{name}}?</v-card-title
       >
       <v-card-actions>
         <v-spacer></v-spacer>
